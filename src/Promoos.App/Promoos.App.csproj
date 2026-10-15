@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Promoos.Data\Promoos.Data.csproj" />
+    <ProjectReference Include="..\Promoos.Data\Promoos.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-using Promoos.Server.Models;
+using Promoos.App.Dto;
 
 namespace Promoos.Server;
 

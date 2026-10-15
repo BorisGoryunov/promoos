@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Promoos.Core\Promoos.Core.csproj" />
+      <ProjectReference Include="..\Promoos.App\Promoos.App.csproj" />
     </ItemGroup>
 
 </Project>
