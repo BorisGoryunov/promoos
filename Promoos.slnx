@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Promoos.App/Promoos.App.csproj" Id="5f9f92eb-2e31-4871-ac41-bc291638aa5e" />
+  <Project Path="src/Promoos.Core/Promoos.Core.csproj" Id="57494414-3d6a-4e77-82ec-b18557ecb2b5" />
+  <Project Path="src/Promoos.Data/Promoos.Data.csproj" Id="3d1ee342-c762-456c-9a73-e3a20325ea66" />
+  <Project Path="src/Promoos.Entities/Promoos.Entities.csproj" />
+  <Project Path="src/Promoos.Server/Promoos.Server.csproj" />
+</Solution>

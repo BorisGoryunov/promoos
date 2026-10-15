@@ -1,0 +1,74 @@
+root = true
+is_readonly = true
+
+[*.cs]
+csharp_style_namespace_declarations = file_scoped:warning
+dotnet_diagnostic.IDE0005.severity = error
+csharp_style_prefer_primary_constructors = false:suggestion
+dotnet_diagnostic.CA1860.severity = none
+
+# Включение проверки именования
+dotnet_naming_rule.private_fields_should_begin_with_underscore.severity = suggestion
+dotnet_naming_rule.private_fields_should_begin_with_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_should_begin_with_underscore.style = underscore_prefix_style
+
+# Определение символов (private fields)
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+# Стиль именования
+dotnet_naming_style.underscore_prefix_style.capitalization = camel_case
+dotnet_naming_style.underscore_prefix_style.required_prefix = _
+
+# Рекомендует использовать упрощенный синтаксис using вместо блока try-finally для управления ресурсами.
+csharp_prefer_simple_using_statement = true:error
+
+# Правило CA1001 предупреждает о типах, реализующих интерфейс IDisposable,
+# но не предоставляющих публичный метод Dispose(). Это может привести к утечкам ресурсов.
+dotnet_diagnostic.CA1001.severity = error
+
+# Правило CA1801 проверяет параметры методов, которые не используются в теле метода. 
+# Это может указывать на ненужные параметры или ошибки в коде.
+dotnet_diagnostic.CA1801.severity = error
+
+# Правило CA1062 проверяет, что публичные методы проверяют входные параметры на null перед их использованием.
+# Это помогает избежать исключений NullReferenceException.
+#dotnet_diagnostic.CA1062.severity = error
+
+# Определяет расположение директив using в файле. Значение outside_namespace означает,
+# что директивы using должны находиться вне пространства имен
+csharp_using_directive_placement = outside_namespace:error
+
+# Рекомендует всегда использовать фигурные скобки {} даже для одностроковых блоков кода. 
+# Это повышает читаемость и снижает вероятность ошибок.
+csharp_prefer_braces = true:silent
+
+# Отключает использование выражений-тел для методов. Это означает, что методы должны иметь полное тело с фигурными скобками.
+#csharp_style_expression_bodied_methods = false:error
+
+# Отключает использование выражений-тел для конструкторов.
+csharp_style_expression_bodied_constructors = false:error
+
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+end_of_line = lf
+insert_final_newline = true
+dotnet_style_operator_placement_when_wrapping = beginning_of_line
+tab_width = 4
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
+dotnet_style_prefer_auto_properties = true:silent
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+dotnet_style_prefer_conditional_expression_over_assignment = true:silent
+dotnet_style_prefer_conditional_expression_over_return = true:silent
+dotnet_style_explicit_tuple_names = true:suggestion
+dotnet_style_prefer_inferred_tuple_names = true:suggestion
+dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
+dotnet_style_prefer_compound_assignment = true:suggestion
+dotnet_style_prefer_simplified_interpolation = true:suggestion

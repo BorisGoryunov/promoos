@@ -1,0 +1,20 @@
+volumes:
+  promoos-database-volume:
+    name: promoos-database-volume
+
+services:
+  promoos-database:
+    image: postgres:17
+    container_name: promoos-database
+    restart: always
+    ports:
+      - "5432:5432"
+    # command:
+    #  -p 5433  
+    environment:
+      POSTGRES_DB: promoos
+      POSTGRES_USER: promoos
+      POSTGRES_PASSWORD: promoos
+    volumes:
+      - promoos-database-volume:/var/lib/postgresql/data
+
