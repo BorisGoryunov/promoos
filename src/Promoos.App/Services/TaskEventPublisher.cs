@@ -8,6 +8,7 @@ namespace Promoos.App.Services;
 public class TaskEventPublisher : IAsyncDisposable
 {
     private readonly IConnection _connection;
+
     private readonly IChannel _channel;
 
     public TaskEventPublisher()

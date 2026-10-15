@@ -17,7 +17,7 @@ public static class ApiInstaller
         {
             if (string.IsNullOrEmpty(model.Title))
             {
-                throw new InvalidOperationException("Title должна быть заполнена.");
+                throw new InvalidOperationException("Title должен быть заполнен.");
             }
 
             if (model.Title.Length > _maxTitleLength)

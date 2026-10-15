@@ -10,6 +10,8 @@ internal class TaskItemConfig : IEntityTypeConfiguration<TaskItem>
     {
         builder.ToTable(nameof(TaskItem));
         builder.Property(x => x.Title).HasMaxLength(200);
-        builder.HasIndex(x => x.TaskId).HasMethod("hash");
+        builder.HasIndex(x => x.TaskId)
+            .HasMethod("hash")
+            .IsUnique();
     }
 }
