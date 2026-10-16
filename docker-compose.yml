@@ -1,7 +1,9 @@
 volumes:
   promoos-database-volume:
     name: promoos-database-volume
-
+  rabbitmq_data:
+  rabbitmq_logs:
+  
 services:
   promoos-database:
     image: postgres:17
@@ -9,8 +11,6 @@ services:
     restart: always
     ports:
       - "5432:5432"
-    # command:
-    #  -p 5433  
     environment:
       POSTGRES_DB: promoos
       POSTGRES_USER: promoos
@@ -18,3 +18,24 @@ services:
     volumes:
       - promoos-database-volume:/var/lib/postgresql/data
 
+  rabbitmq:
+      image: rabbitmq:3.13-management-alpine
+      container_name: rabbitmq
+      hostname: rabbitmq
+      restart: unless-stopped
+      ports:
+        - "5672:5672"     # AMQP
+        - "15672:15672"   # Management UI
+      environment:
+        RABBITMQ_DEFAULT_USER: guest
+        RABBITMQ_DEFAULT_PASS: guest
+        RABBITMQ_DEFAULT_VHOST: /
+      volumes:
+        - rabbitmq_data:/var/lib/rabbitmq
+        - rabbitmq_logs:/var/log/rabbitmq
+      healthcheck:
+        test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+        start_period: 40s

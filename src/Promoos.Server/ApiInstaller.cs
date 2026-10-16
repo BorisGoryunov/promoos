@@ -1,35 +1,34 @@
+using Microsoft.AspNetCore.Mvc;
 using Promoos.App.Dto;
+using Promoos.App.Services;
 
 namespace Promoos.Server;
 
 public static class ApiInstaller
 {
-    private const int _maxTitleLength = 200;
-
     public static void MapApi(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/tasks", (int limit, int offset) =>
+        endpoints.MapGet("/tasks", async (int limit, int offset, [FromServices] TaskItemService taskItemservice) =>
         {
+            var items = await taskItemservice.GetAll(limit, offset);
+            return Results.Ok(items);
+        });
+
+        endpoints.MapPost("/tasks", async (CreateTaskItem model, [FromServices] TaskItemService taskItemservice) =>
+        {
+            await taskItemservice.Create(model);
             return Results.Ok();
         });
 
-        endpoints.MapPost("/tasks", (TaskItemModel model) =>
+        endpoints.MapPut("/tasks/{id:guid}/complete", async (Guid id, [FromServices] TaskItemService taskItemservice) =>
         {
-            if (string.IsNullOrEmpty(model.Title))
-            {
-                throw new InvalidOperationException("Title должен быть заполнен.");
-            }
-
-            if (model.Title.Length > _maxTitleLength)
-            {
-                throw new InvalidOperationException($"Title должен быть равен или меньше {_maxTitleLength}.");
-            }
-
+            await taskItemservice.Complete(id);
             return Results.Ok();
         });
 
-        endpoints.MapPut("/tasks/{id:guid}/complete", (Guid id) =>
+        endpoints.MapDelete("/tasks/{id:guid}", async (Guid id, [FromServices] TaskItemService taskItemservice) =>
         {
+            await taskItemservice.Delete(id);
             return Results.Ok();
         });
     }

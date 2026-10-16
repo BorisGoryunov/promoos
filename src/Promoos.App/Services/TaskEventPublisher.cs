@@ -32,6 +32,7 @@ public class TaskEventPublisher : IAsyncDisposable
             autoDelete: false).GetAwaiter().GetResult();
     }
 
+
     public async Task PublishTaskCompleted(TaskCompletedEvent evt)
     {
         var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(evt));
@@ -54,6 +55,7 @@ public class TaskEventPublisher : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        await Task.Delay(TimeSpan.FromSeconds(5));
         await _channel.CloseAsync();
         await _connection.CloseAsync();
     }

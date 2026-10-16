@@ -45,7 +45,7 @@ public static class Installer
         });
     }
 
-    public static void Migrate(this IServiceProvider serviceProvider)
+    public static async Task Migrate(this IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<AppDbContext>>();
@@ -53,7 +53,7 @@ public static class Installer
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         logger.LogInformation($"Применение миграций.");
-        dbContext.Database.Migrate();
+        await dbContext.Database.MigrateAsync();
         logger.LogInformation("Применение миграций - OK.");
     }
 

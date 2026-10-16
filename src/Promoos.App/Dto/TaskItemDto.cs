@@ -2,7 +2,7 @@ using Promoos.Core;
 
 namespace Promoos.App.Dto;
 
-public class TaskItemModel
+public class TaskItemDto
 {
     public required Guid TaskId { get; init; }
 

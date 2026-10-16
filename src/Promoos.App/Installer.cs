@@ -10,4 +10,10 @@ public static class Installer
         services.AddScoped<TaskItemService>();
         services.AddSingleton<TaskEventPublisher>();
     }
+
+    public static void AppServicesInitialize(this IServiceProvider serviceProvider)
+    {
+        var scope = serviceProvider.CreateScope();
+        var _ = scope.ServiceProvider.GetRequiredService<TaskEventPublisher>();
+    }
 }
