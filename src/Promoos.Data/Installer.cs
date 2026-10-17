@@ -4,7 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+#if DEBUG
 using System.Diagnostics;
+#endif
 
 namespace Promoos.Data;
 

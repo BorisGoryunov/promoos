@@ -1,9 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Promoos.App.Dto;
+using Promoos.Core;
 using Promoos.Data;
 using Promoos.Entities;
-using Microsoft.EntityFrameworkCore;
-using Promoos.App.Dto;
-using Microsoft.Extensions.Logging;
-using Promoos.Core;
+using System.ComponentModel.DataAnnotations;
 
 namespace Promoos.App.Services;
 
@@ -25,8 +26,15 @@ public class TaskItemService
         _logger = logger;
     }
 
-    public async Task Create(CreateTaskItem model)
+    public async Task<Guid> Create(CreateTaskItem model)
     {
+        var priority = model.Priority ?? Priority.Medium;
+
+        if (!Enum.IsDefined(priority))
+        {
+            throw new ValidationException($"Недопустимое значение Priority: {(int)priority}.");
+        }
+
         if (string.IsNullOrEmpty(model.Title))
         {
             throw new InvalidOperationException("Title должен быть заполнен.");
@@ -39,14 +47,16 @@ public class TaskItemService
 
         var entity = new TaskItem
         {
-            TaskId = model.TaskId,
+            TaskId = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            Priority = model.Priority,
+            Priority = priority,
             Title = model.Title
         };
 
         await _appDbContext.AddAsync(entity);
         await _appDbContext.SaveChangesAsync();
+
+        return entity.TaskId;
     }
 
     public async Task<IReadOnlyList<TaskItemDto>> GetAll(int limit, int offset)
@@ -75,21 +85,33 @@ public class TaskItemService
             {
                 x.Id,
                 x.Title,
+                x.IsCompleted
             })
             .FirstOrDefaultAsync()
             ?? throw new KeyNotFoundException($"TaskItem TaskId {taskId} не найдена.");
 
+        if (entity.IsCompleted)
+        {
+            throw new ConflictException($"TaskItem TaskId {taskId} конфликт.");
+        }
+
         var now = DateTime.UtcNow;
 
-        await _appDbContext.Set<TaskItem>()
+        var rowCount = await _appDbContext.Set<TaskItem>()
             .Where(x => !x.IsCompleted)
             .Where(x => x.TaskId == taskId)
             .ExecuteUpdateAsync(x => x
                 .SetProperty(y => y.CompletedAt, now)
                 .SetProperty(y => y.IsCompleted, true));
+
+        if (rowCount == 0)
+        {
+            throw new ConflictException($"TaskItem TaskId {taskId} конфликт.");
+        }
+
         try
         {
-            var taskCompleted = new TaskCompletedEvent
+            var taskCompletedEvent = new TaskCompletedEvent
             {
                 TaskId = taskId,
                 CompletedAt = now,
@@ -97,7 +119,7 @@ public class TaskItemService
                 Priority = Priority.High
             };
 
-            await _taskEventPublisher.PublishTaskCompleted(taskCompleted);
+            await _taskEventPublisher.PublishTaskCompleted(taskCompletedEvent);
         }
         catch (Exception ex)
         {
@@ -107,8 +129,13 @@ public class TaskItemService
 
     public async Task Delete(Guid taskId)
     {
-        await _appDbContext.Set<TaskItem>()
+        var deleteCount = await _appDbContext.Set<TaskItem>()
             .Where(x => x.TaskId == taskId)
             .ExecuteDeleteAsync();
+
+        if (deleteCount == 0)
+        {
+            throw new KeyNotFoundException();
+        }
     }
 }

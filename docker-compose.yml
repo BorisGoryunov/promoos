@@ -3,7 +3,7 @@ volumes:
     name: promoos-database-volume
   rabbitmq_data:
   rabbitmq_logs:
-  
+
 services:
   promoos-database:
     image: postgres:17
@@ -17,7 +17,12 @@ services:
       POSTGRES_PASSWORD: promoos
     volumes:
       - promoos-database-volume:/var/lib/postgresql/data
-
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d promoos"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
   rabbitmq:
       image: rabbitmq:3.13-management-alpine
       container_name: rabbitmq
@@ -39,3 +44,26 @@ services:
         timeout: 10s
         retries: 5
         start_period: 40s
+
+  task-service:
+      container_name: task-service
+      build:
+          context: .
+      restart: unless-stopped          
+      ports:
+         - "8080:8080"        
+      environment:
+        ASPNETCORE_URLS: "http://+:8080"
+        ASPNETCORE_ENVIRONMENT: "Production"
+        ConnectionStrings__Default: "Host=promoos-database;Port=5432;Database=promoos;Username=promoos;Password=promoos"
+        RabbitMqConfig__Host: "rabbitmq"
+        RabbitMqConfig__Username: "guest"
+        RabbitMqConfig__Password: "guest"
+        RabbitMqConfig__Port: "5672"
+        RabbitMqConfig__VirtualHost: "/"
+      depends_on:
+        promoos-database:
+          condition: service_healthy
+        rabbitmq:
+          condition: service_healthy
+

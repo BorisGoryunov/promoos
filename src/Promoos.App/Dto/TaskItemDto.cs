@@ -8,11 +8,11 @@ public class TaskItemDto
 
     public required string Title { get; init; }
 
-    public bool IsCompleted { get; set; }
+    public required bool IsCompleted { get; init; }
 
-    public DateTimeOffset CreatedAt { get; set; }
+    public required DateTimeOffset CreatedAt { get; init; }
 
-    public DateTimeOffset? CompletedAt { get; set; }
+    public required DateTimeOffset? CompletedAt { get; init; }
 
-    public Priority Priority { get; set; }
+    public required Priority Priority { get; init; }
 }

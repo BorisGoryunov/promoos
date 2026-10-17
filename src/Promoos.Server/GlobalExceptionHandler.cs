@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Promoos.Core;
+using System.ComponentModel.DataAnnotations;
 
 namespace Promoos.Server;
 
@@ -23,6 +24,7 @@ public class GlobalExceptionHandler : IExceptionHandler
         var (status, title) = exception switch
         {
             ArgumentException => (StatusCodes.Status400BadRequest, "Bad request"),
+            ValidationException => (StatusCodes.Status400BadRequest, "Bad request"),
             InvalidOperationException => (StatusCodes.Status400BadRequest, "Bad request"),
             ConflictException => (StatusCodes.Status409Conflict, "Conflict"),
             KeyNotFoundException => (StatusCodes.Status404NotFound, "Not found"),

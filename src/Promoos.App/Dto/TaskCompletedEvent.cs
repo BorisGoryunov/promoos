@@ -8,7 +8,7 @@ public class TaskCompletedEvent
 
     public required string Title { get; init; }
 
-    public DateTimeOffset? CompletedAt { get; set; }
+    public required DateTimeOffset CompletedAt { get; init; }
 
-    public Priority Priority { get; set; }
+    public required Priority Priority { get; set; }
 }
